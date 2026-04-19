@@ -1226,65 +1226,72 @@ function setRatesRange(n){
 // ══════════════════
 // US MACRO
 // ══════════════════
-function renderMacro(data){
-  // Data is wide-format: row0=header categories, row1=Último dato, row2=Dato previo, row3=extras
-  // Columns: PCE(0-1), CPI(3-4), IJC(6-7), NFP(9-10), UE(12-13)
-  const r1=data[0], r2=data[1], r3=data[2]||{};
+function renderMacro(rawText){
+  // Este CSV tiene encabezados duplicados, se parsea como arrays posicionales.
+  // Columnas fijas (0-indexed):
+  //   1=PCE valor  |  4=CPI valor  |  7=IJC valor  |  10=NFP valor  |  13=UE valor
+  // Fila 1 = último dato · Fila 2 = dato previo · Fila 3 = promedios
+  const lines = rawText.split('\n').map(l=>l.replace(/\r/,'')).filter(l=>l.trim());
+  const rows  = lines.map(l=>splitLine(l).map(c=>c.trim()));
+  const r1=rows[1]||[], r2=rows[2]||[], r3=rows[3]||[];
 
-  // PCE
-  const pceLast=Object.values(r1)[1]||'—';
-  const pcePrev=Object.values(r2)[1]||'—';
+  // ── PCE ──
+  const pceLast=r1[1]||'—', pcePrev=r2[1]||'—';
   $('pce-last').textContent=pceLast;
   $('pce-prev').textContent=pcePrev;
-  const pceNum=parseFloat(pceLast), pcePrevNum=parseFloat(pcePrev);
-  if(!isNaN(pceNum)&&!isNaN(pcePrevNum)){
-    const d=pceNum-pcePrevNum;
+  const pceN=parseFloat(pceLast), pcePrevN=parseFloat(pcePrev);
+  if(!isNaN(pceN)&&!isNaN(pcePrevN)){
+    const d=pceN-pcePrevN;
     $('pce-badge').innerHTML=`<div class="badge ${d<=0?'pos':'neg'}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(2)}pp vs previo · Meta Fed: 2.0%</div>`;
   }
 
-  // CPI
-  const cpiLast=Object.values(r1)[4]||'—';
-  const cpiPrev=Object.values(r2)[4]||'—';
+  // ── CPI ──
+  const cpiLast=r1[4]||'—', cpiPrev=r2[4]||'—';
   $('cpi-last').textContent=cpiLast;
   $('cpi-prev').textContent=cpiPrev;
-  const cpiNum=parseFloat(cpiLast), cpiPrevNum=parseFloat(cpiPrev);
-  if(!isNaN(cpiNum)&&!isNaN(cpiPrevNum)){
-    const d=cpiNum-cpiPrevNum;
+  const cpiN=parseFloat(cpiLast), cpiPrevN=parseFloat(cpiPrev);
+  if(!isNaN(cpiN)&&!isNaN(cpiPrevN)){
+    const d=cpiN-cpiPrevN;
     $('cpi-badge').innerHTML=`<div class="badge ${d<=0?'pos':'neg'}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(2)}pp vs previo</div>`;
   }
 
-  // Initial Jobless Claims
-  $('ijc-last').textContent=Object.values(r1)[7]||'—';
-  $('ijc-prev').textContent=Object.values(r2)[7]||'—';
-  const ijc3m=Object.values(r3)[7];
+  // ── Initial Jobless Claims ──
+  $('ijc-last').textContent=r1[7]||'—';
+  $('ijc-prev').textContent=r2[7]||'—';
+  const ijc3m=r3[7]||'';
   if(ijc3m) $('ijc-3m').textContent=parseInt(ijc3m.replace(/,/g,'')).toLocaleString('es-MX');
 
-  // NFP
-  $('nfp-last').textContent=Object.values(r1)[10]||'—';
-  $('nfp-prev').textContent=Object.values(r2)[10]||'—';
+  // ── Non-Farm Payrolls ──
+  $('nfp-last').textContent=r1[10]||'—';
+  $('nfp-prev').textContent=r2[10]||'—';
 
-  // Unemployment
-  $('ue-last').textContent=Object.values(r1)[13]||'—';
-  $('ue-prev').textContent=Object.values(r2)[13]||'—';
-  const ue12m=Object.values(r3)[13];
+  // ── Tasa de Desempleo ──
+  $('ue-last').textContent=r1[13]||'—';
+  $('ue-prev').textContent=r2[13]||'—';
+  const ue12m=r3[13]||'';
   if(ue12m) $('ue-12m').textContent=ue12m;
 }
 
 
 async function loadAll(){
   const files=[
-    {name:'Input_MXN.csv',      key:'mxn',   render:renderMXN,   err:'err-mx'},
-    {name:'Input_Tasas.csv',    key:'tasas', render:renderTasas, err:'err-mx'},
-    {name:'Input_US_Rates.csv', key:'rates', render:renderRates, err:'err-macro'},
-    {name:'Input_US_Macro.csv', key:'macro', render:renderMacro, err:'err-macro'},
-    {name:'Input_PI.csv',       key:'pi',    render:renderPI,    err:'err-us'},
-    {name:'Input_DM.csv',       key:'dm',    render:renderDM,    err:'err-us'},
-    {name:'Input_L.csv',        key:'l',     render:renderL,     err:'err-us'},
+    {name:'Input_MXN.csv',      key:'mxn',   render:renderMXN,   err:'err-mx',    raw:false},
+    {name:'Input_Tasas.csv',    key:'tasas', render:renderTasas, err:'err-mx',    raw:false},
+    {name:'Input_US_Rates.csv', key:'rates', render:renderRates, err:'err-macro', raw:false},
+    {name:'Input_US_Macro.csv', key:'macro', render:renderMacro, err:'err-macro', raw:true},
+    {name:'Input_PI.csv',       key:'pi',    render:renderPI,    err:'err-us',    raw:false},
+    {name:'Input_DM.csv',       key:'dm',    render:renderDM,    err:'err-us',    raw:false},
+    {name:'Input_L.csv',        key:'l',     render:renderL,     err:'err-us',    raw:false},
   ];
   const errs={'err-mx':[],'err-macro':[],'err-us':[]};
   for(const f of files){
-    try{ const d=await fetchCSV(f.name); state[f.key]=d; f.render(d); }
-    catch(e){ errs[f.err].push(`${f.name}: ${e.message}`); }
+    try{
+      const r=await fetch(f.name+'?t='+Date.now());
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const text=await r.text();
+      if(f.raw){ f.render(text); }
+      else{ const d=parseCSV(text); state[f.key]=d; f.render(d); }
+    }catch(e){ errs[f.err].push(`${f.name}: ${e.message}`); }
   }
   for(const[id,msgs] of Object.entries(errs)){
     const el=$(id);
