@@ -458,7 +458,40 @@
   .year-cell .ret.pos { color:var(--positive); }
   .year-cell .ret.neg { color:var(--negative); }
 
-  /* ── RANGE TABLE ── */
+  /* ── MACRO KPI BLOCK ── */
+  .macro-kpi-block { display:flex; flex-direction:column; gap:0; }
+
+  .macro-kpi-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+  }
+
+  .macro-kpi-row:last-of-type { border-bottom:none; }
+
+  .mkr-lbl {
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.1em;
+    color:var(--text-muted);
+    text-transform:uppercase;
+  }
+
+  .mkr-val {
+    font-family:'Playfair Display',serif;
+    font-size:26px;
+    color:var(--text);
+    line-height:1;
+  }
+
+  .mkr-prev {
+    font-size:18px;
+    color:var(--text-mid);
+  }
+
+
   .range-table { display:flex; gap:12px; margin-top:18px; }
 
   .range-item {
@@ -540,8 +573,11 @@
   <button class="tab-btn active" onclick="switchTab('mx')">
     <span class="tab-num">01 /</span> Mercados México
   </button>
+  <button class="tab-btn" onclick="switchTab('macro')">
+    <span class="tab-num">02 /</span> US Macro
+  </button>
   <button class="tab-btn" onclick="switchTab('us')">
-    <span class="tab-num">02 /</span> Real Estate EE.UU.
+    <span class="tab-num">03 /</span> Real Estate EE.UU.
   </button>
 </div>
 
@@ -638,7 +674,184 @@
 </div>
 
 <!-- ════════════════════════════════════════════
-     PANEL 2 — REAL ESTATE EE.UU.
+     PANEL 2 — US MACRO
+════════════════════════════════════════════ -->
+<div id="panel-macro" class="tab-panel">
+<div class="wrapper">
+  <div id="err-macro" class="error-banner"></div>
+
+  <div class="panel-hero">
+    <h2>Macroeconomía <em>Estados Unidos</em></h2>
+    <p>Tasas de interés · Inflación PCE &amp; CPI · Empleo</p>
+  </div>
+
+  <!-- TASAS US -->
+  <div class="section">
+    <div class="section-label">
+      <span class="sl-num">01</span>
+      <span class="sl-text">Tasas de Interés · U.S. Treasury &amp; Mortgage</span>
+      <div class="sl-line"></div>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="grid-4" style="margin-bottom:18px" id="rates-kpis">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Tasa 2Y</div>
+        <div class="kpi-value" id="us-r2y">—</div>
+        <div class="kpi-sub">U.S. Treasury 2 años</div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Tasa 10Y</div>
+        <div class="kpi-value" id="us-r10y">—</div>
+        <div class="kpi-sub">U.S. Treasury 10 años</div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Mortgage 30Y</div>
+        <div class="kpi-value" id="us-rmtg">—</div>
+        <div class="kpi-sub">Tasa hipotecaria 30 años</div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Spread 2Y–10Y</div>
+        <div class="kpi-value" id="us-spread">—</div>
+        <div class="kpi-sub">Diferencial de curva</div>
+        <div id="us-spread-badge"></div>
+      </div>
+    </div>
+
+    <!-- Rates chart -->
+    <div style="margin-bottom:18px">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Tasas · Serie de tiempo</div>
+        <div class="card-subtitle">Treasury 2Y · Treasury 10Y · Mortgage 30Y</div>
+        <div class="chart-controls" id="rates-ctrl">
+          <button class="ctrl-btn" data-r="90"  onclick="setRatesRange(90)">3M</button>
+          <button class="ctrl-btn active" data-r="252" onclick="setRatesRange(252)">1A</button>
+          <button class="ctrl-btn" data-r="504" onclick="setRatesRange(504)">2A</button>
+          <button class="ctrl-btn" data-r="0"   onclick="setRatesRange(0)">Todo</button>
+        </div>
+        <div class="chart-wrap" style="height:280px"><canvas id="rates-chart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- INFLACIÓN -->
+  <div class="section">
+    <div class="section-label">
+      <span class="sl-num">02</span>
+      <span class="sl-text">Inflación · PCE &amp; CPI</span>
+      <div class="sl-line"></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- PCE -->
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">PCE Inflation</div>
+        <div class="card-subtitle">Personal Consumption Expenditures · Fed target</div>
+        <div class="macro-kpi-block">
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Último dato</div>
+            <div class="mkr-val" id="pce-last">—</div>
+          </div>
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Dato previo</div>
+            <div class="mkr-val mkr-prev" id="pce-prev">—</div>
+          </div>
+          <div id="pce-badge" style="margin-top:14px"></div>
+        </div>
+      </div>
+      <!-- CPI -->
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">CPI Inflation</div>
+        <div class="card-subtitle">Consumer Price Index · Bureau of Labor Statistics</div>
+        <div class="macro-kpi-block">
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Último dato</div>
+            <div class="mkr-val" id="cpi-last">—</div>
+          </div>
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Dato previo</div>
+            <div class="mkr-val mkr-prev" id="cpi-prev">—</div>
+          </div>
+          <div id="cpi-badge" style="margin-top:14px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- EMPLEO -->
+  <div class="section">
+    <div class="section-label">
+      <span class="sl-num">03</span>
+      <span class="sl-text">Mercado Laboral · Employment Data</span>
+      <div class="sl-line"></div>
+    </div>
+
+    <div class="grid-4">
+      <!-- Initial Jobless Claims -->
+      <div class="card col-2"><div class="card-accent"></div>
+        <div class="card-title">Initial Jobless Claims</div>
+        <div class="card-subtitle">Solicitudes iniciales de desempleo · semanales</div>
+        <div class="macro-kpi-block">
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Último dato</div>
+            <div class="mkr-val" id="ijc-last">—</div>
+          </div>
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Dato previo</div>
+            <div class="mkr-val mkr-prev" id="ijc-prev">—</div>
+          </div>
+          <div class="macro-kpi-row" style="margin-top:12px">
+            <div class="mkr-lbl">Promedio 3M</div>
+            <div class="mkr-val mkr-prev" id="ijc-3m">—</div>
+          </div>
+        </div>
+      </div>
+      <!-- Non-Farm Payrolls -->
+      <div class="card col-2"><div class="card-accent"></div>
+        <div class="card-title">Non-Farm Payrolls</div>
+        <div class="card-subtitle">Nómina no agrícola · variación mensual</div>
+        <div class="macro-kpi-block">
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Último dato</div>
+            <div class="mkr-val" id="nfp-last">—</div>
+          </div>
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Dato previo</div>
+            <div class="mkr-val mkr-prev" id="nfp-prev">—</div>
+          </div>
+        </div>
+      </div>
+      <!-- Desempleo -->
+      <div class="card col-2"><div class="card-accent"></div>
+        <div class="card-title">Tasa de Desempleo</div>
+        <div class="card-subtitle">Unemployment Rate · Bureau of Labor Statistics</div>
+        <div class="macro-kpi-block">
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Último dato</div>
+            <div class="mkr-val" id="ue-last">—</div>
+          </div>
+          <div class="macro-kpi-row">
+            <div class="mkr-lbl">Dato previo</div>
+            <div class="mkr-val mkr-prev" id="ue-prev">—</div>
+          </div>
+          <div class="macro-kpi-row" style="margin-top:12px">
+            <div class="mkr-lbl">Promedio 12M</div>
+            <div class="mkr-val mkr-prev" id="ue-12m">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANEL 3 — REAL ESTATE EE.UU.
 ════════════════════════════════════════════ -->
 <div id="panel-us" class="tab-panel">
 <div class="wrapper">
@@ -745,8 +958,10 @@
 // TAB LOGIC
 // ══════════════════
 function switchTab(t) {
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(t==='mx'?0:1)));
+  const tabs=['mx','macro','us'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===t));
   document.getElementById('panel-mx').classList.toggle('active',t==='mx');
+  document.getElementById('panel-macro').classList.toggle('active',t==='macro');
   document.getElementById('panel-us').classList.toggle('active',t==='us');
   setTimeout(()=>Object.values(state.charts).forEach(c=>c&&c.resize()),60);
 }
@@ -807,7 +1022,7 @@ const CB = {
 
 const C={teal:'#3d8a8c',tealLt:'#6bbfc1',slate:'#3d4f5c',coral:'#c85a4a',amber:'#b8894a',sage:'#5a7a6a'};
 
-let state={mxn:[],dm:[],l:[],pi:[],tasas:[],charts:{}};
+let state={mxn:[],dm:[],l:[],pi:[],tasas:[],rates:[],macro:[],charts:{}};
 
 // ══════════════════
 // FETCH
@@ -969,25 +1184,112 @@ function setLRange(n){
 }
 
 // ══════════════════
-// LOAD ALL
+// US RATES
 // ══════════════════
+let ratesAll={labels:[],r2y:[],r10y:[],mtg:[]};
+let ratesChart=null;
+
+function renderRates(data){
+  const rows=data.filter(r=>r['Fecha']&&r['Tasa 2Y']&&!isNaN(parseFloat(r['Tasa 2Y'])));
+  ratesAll={
+    labels:rows.map(r=>r['Fecha']),
+    r2y:  rows.map(r=>parseFloat(r['Tasa 2Y'])),
+    r10y: rows.map(r=>parseFloat(r['Tasa 10Y'])),
+    mtg:  rows.map(r=>parseFloat(r['Mortgage 30Y'])),
+  };
+  const last=rows[rows.length-1];
+  const r2=parseFloat(last['Tasa 2Y']), r10=parseFloat(last['Tasa 10Y']), mtg=parseFloat(last['Mortgage 30Y']);
+  const spread=(r10-r2);
+  $('us-r2y').textContent =fmt(r2,2)+'%';
+  $('us-r10y').textContent=fmt(r10,2)+'%';
+  $('us-rmtg').textContent=fmt(mtg,2)+'%';
+  $('us-spread').textContent=(spread>=0?'+':'')+fmt(spread,2)+'%';
+  $('us-spread-badge').innerHTML=`<div class="badge ${spread>=0?'pos':'neg'}">${spread>=0?'Curva normal':'Curva invertida'}</div>`;
+  setRatesRange(252);
+}
+
+let ratesChartObj=null;
+function setRatesRange(n){
+  document.querySelectorAll('#rates-ctrl .ctrl-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.r)===n));
+  const sl=n===0?0:Math.max(0,ratesAll.labels.length-n);
+  const labels=ratesAll.labels.slice(sl);
+  const ds=[
+    {label:'Treasury 2Y',  data:ratesAll.r2y.slice(sl), borderColor:C.teal,  borderWidth:2,   pointRadius:0, tension:0.15, fill:false},
+    {label:'Treasury 10Y', data:ratesAll.r10y.slice(sl),borderColor:C.slate, borderWidth:2,   pointRadius:0, tension:0.15, fill:false},
+    {label:'Mortgage 30Y', data:ratesAll.mtg.slice(sl), borderColor:C.coral, borderWidth:1.5, pointRadius:0, borderDash:[5,3], tension:0.15, fill:false},
+  ];
+  const opts={...CB,plugins:{...CB.plugins,tooltip:{...CB.plugins.tooltip,callbacks:{label:c=>`  ${c.dataset.label}: ${fmt(c.parsed.y,2)}%`}}},scales:{...CB.scales,y:{...CB.scales.y,ticks:{...CB.scales.y?.ticks,callback:v=>v.toFixed(2)+'%'}}}};
+  if(ratesChartObj){ratesChartObj.data.labels=labels;ratesChartObj.data.datasets=ds;ratesChartObj.update();}
+  else{ratesChartObj=new Chart($('rates-chart'),{type:'line',data:{labels,datasets:ds},options:opts});state.charts.rates=ratesChartObj;}
+}
+
+// ══════════════════
+// US MACRO
+// ══════════════════
+function renderMacro(data){
+  // Data is wide-format: row0=header categories, row1=Último dato, row2=Dato previo, row3=extras
+  // Columns: PCE(0-1), CPI(3-4), IJC(6-7), NFP(9-10), UE(12-13)
+  const r1=data[0], r2=data[1], r3=data[2]||{};
+
+  // PCE
+  const pceLast=Object.values(r1)[1]||'—';
+  const pcePrev=Object.values(r2)[1]||'—';
+  $('pce-last').textContent=pceLast;
+  $('pce-prev').textContent=pcePrev;
+  const pceNum=parseFloat(pceLast), pcePrevNum=parseFloat(pcePrev);
+  if(!isNaN(pceNum)&&!isNaN(pcePrevNum)){
+    const d=pceNum-pcePrevNum;
+    $('pce-badge').innerHTML=`<div class="badge ${d<=0?'pos':'neg'}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(2)}pp vs previo · Meta Fed: 2.0%</div>`;
+  }
+
+  // CPI
+  const cpiLast=Object.values(r1)[4]||'—';
+  const cpiPrev=Object.values(r2)[4]||'—';
+  $('cpi-last').textContent=cpiLast;
+  $('cpi-prev').textContent=cpiPrev;
+  const cpiNum=parseFloat(cpiLast), cpiPrevNum=parseFloat(cpiPrev);
+  if(!isNaN(cpiNum)&&!isNaN(cpiPrevNum)){
+    const d=cpiNum-cpiPrevNum;
+    $('cpi-badge').innerHTML=`<div class="badge ${d<=0?'pos':'neg'}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(2)}pp vs previo</div>`;
+  }
+
+  // Initial Jobless Claims
+  $('ijc-last').textContent=Object.values(r1)[7]||'—';
+  $('ijc-prev').textContent=Object.values(r2)[7]||'—';
+  const ijc3m=Object.values(r3)[7];
+  if(ijc3m) $('ijc-3m').textContent=parseInt(ijc3m.replace(/,/g,'')).toLocaleString('es-MX');
+
+  // NFP
+  $('nfp-last').textContent=Object.values(r1)[10]||'—';
+  $('nfp-prev').textContent=Object.values(r2)[10]||'—';
+
+  // Unemployment
+  $('ue-last').textContent=Object.values(r1)[13]||'—';
+  $('ue-prev').textContent=Object.values(r2)[13]||'—';
+  const ue12m=Object.values(r3)[13];
+  if(ue12m) $('ue-12m').textContent=ue12m;
+}
+
+
 async function loadAll(){
   const files=[
-    {name:'Input_MXN.csv',   key:'mxn',   render:renderMXN,   err:'err-mx'},
-    {name:'Input_Tasas.csv', key:'tasas', render:renderTasas, err:'err-mx'},
-    {name:'Input_PI.csv',    key:'pi',    render:renderPI,    err:'err-us'},
-    {name:'Input_DM.csv',    key:'dm',    render:renderDM,    err:'err-us'},
-    {name:'Input_L.csv',     key:'l',     render:renderL,     err:'err-us'},
+    {name:'Input_MXN.csv',      key:'mxn',   render:renderMXN,   err:'err-mx'},
+    {name:'Input_Tasas.csv',    key:'tasas', render:renderTasas, err:'err-mx'},
+    {name:'Input_US_Rates.csv', key:'rates', render:renderRates, err:'err-macro'},
+    {name:'Input_US_Macro.csv', key:'macro', render:renderMacro, err:'err-macro'},
+    {name:'Input_PI.csv',       key:'pi',    render:renderPI,    err:'err-us'},
+    {name:'Input_DM.csv',       key:'dm',    render:renderDM,    err:'err-us'},
+    {name:'Input_L.csv',        key:'l',     render:renderL,     err:'err-us'},
   ];
-  const errs={'err-mx':[],'err-us':[]};
+  const errs={'err-mx':[],'err-macro':[],'err-us':[]};
   for(const f of files){
     try{ const d=await fetchCSV(f.name); state[f.key]=d; f.render(d); }
     catch(e){ errs[f.err].push(`${f.name}: ${e.message}`); }
   }
   for(const[id,msgs] of Object.entries(errs)){
     const el=$(id);
-    if(msgs.length){el.textContent='⚠ '+msgs.join(' · ');el.style.display='block';}
-    else el.style.display='none';
+    if(el){ if(msgs.length){el.textContent='⚠ '+msgs.join(' · ');el.style.display='block';}
+    else el.style.display='none'; }
   }
   $('update-time').textContent=new Date().toLocaleString('es-MX',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
 }
