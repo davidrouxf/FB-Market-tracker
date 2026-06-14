@@ -1457,30 +1457,31 @@ const PREMIUM_RANGES = [
   '$10M+'
 ];
 
-// Parsear CSV premium (estructura especial: 4 bloques separados por columna NaN)
-function parsePremiumCSV(data) {
-  // data[0] = encabezados de bloque (Ventas cerradas, Nuevos listados, Inventario, Tiempo…)
-  // data[1..n] = filas de datos por mes
-  // Columnas de interés por índice (0-based sobre el array de values):
-  //   Ventas cerradas:  cols 1-7, Total col 8
-  //   Nuevos listados:  cols 11-17, Total col 18
-  //   Inventario:       cols 21-27, Total col 28
-  //   Días a cierre:    cols 31-37, Promedio col 38
+// Parsear CSV premium desde texto crudo (tiene 2 filas de encabezado, se ignoran)
+// Estructura de columnas (0-based):
+//   col 0        = Mes
+//   cols 1-7     = Ventas cerradas por rango,  col 8  = Total
+//   cols 11-17   = Nuevos listados por rango,  col 18 = Total
+//   cols 21-27   = Inventario por rango,       col 28 = Total
+//   cols 31-37   = Días a cierre por rango,    col 38 = Promedio
+function parsePremiumCSV(rawText) {
+  const lines = rawText.split('\n').map(l => l.replace(/\r/, '')).filter(l => l.trim());
+  // lines[0] = bloque headers, lines[1] = sub-headers, lines[2..] = datos
   const months = [];
-  data.slice(1).forEach(row => {
-    const v = Object.values(row);
+  lines.slice(2).forEach(line => {
+    const v = splitLine(line);
     const mes = (v[0]||'').trim();
-    if(!mes) return;
+    if (!mes) return;
     months.push({
       mes,
-      ventas:     [1,2,3,4,5,6,7].map(i=>parseInt(v[i])||0),
-      ventasTotal: parseInt(v[8])||0,
-      listings:   [11,12,13,14,15,16,17].map(i=>parseInt(v[i])||0),
-      listingsTotal: parseInt(v[18])||0,
-      inventario: [21,22,23,24,25,26,27].map(i=>parseInt(v[i])||0),
+      ventas:          [1,2,3,4,5,6,7].map(i => parseInt(v[i])||0),
+      ventasTotal:     parseInt(v[8])||0,
+      listings:        [11,12,13,14,15,16,17].map(i => parseInt(v[i])||0),
+      listingsTotal:   parseInt(v[18])||0,
+      inventario:      [21,22,23,24,25,26,27].map(i => parseInt(v[i])||0),
       inventarioTotal: parseInt(v[28])||0,
-      dias:       [31,32,33,34,35,36,37].map(i=>parseInt(v[i])||0),
-      diasProm:   parseInt(v[38])||0,
+      dias:            [31,32,33,34,35,36,37].map(i => parseInt(v[i])||0),
+      diasProm:        parseInt(v[38])||0,
     });
   });
   return months;
@@ -1565,15 +1566,15 @@ function renderTHGeneral(data) {
   renderGeneralTable(data, 'th-general-table');
 }
 
-function renderSHPremium(data) {
-  shMonths = parsePremiumCSV(data);
+function renderSHPremium(rawText) {
+  shMonths = parsePremiumCSV(rawText);
   shSelectedIdx = shMonths.length - 1;
   buildMonthCtrl(shMonths, 'sh-month-ctrl', 'sh', 'shSelectMonth');
   renderPremiumMonth(shMonths, 'sh', shSelectedIdx);
 }
 
-function renderTHPremium(data) {
-  thMonths = parsePremiumCSV(data);
+function renderTHPremium(rawText) {
+  thMonths = parsePremiumCSV(rawText);
   thSelectedIdx = thMonths.length - 1;
   buildMonthCtrl(thMonths, 'th-month-ctrl', 'th', 'thSelectMonth');
   renderPremiumMonth(thMonths, 'th', thSelectedIdx);
@@ -1589,9 +1590,9 @@ async function loadAll(){
     {name:'Input_DM.csv',                   key:'dm',     render:renderDM,        err:'err-us',    raw:false},
     {name:'Input_L.csv',                    key:'l',      render:renderL,         err:'err-us',    raw:false},
     {name:'Input_SingleHomes_general.csv',  key:'shGen',  render:renderSHGeneral, err:'err-miami', raw:false},
-    {name:'Input_SingleHomes_Premium.csv',  key:'shPrem', render:renderSHPremium, err:'err-miami', raw:false},
+    {name:'Input_SingleHomes_Premium.csv',  key:'shPrem', render:renderSHPremium, err:'err-miami', raw:true},
     {name:'Input_TownHomes_general.csv',    key:'thGen',  render:renderTHGeneral, err:'err-miami', raw:false},
-    {name:'Input_TownHomes_Premium.csv',    key:'thPrem', render:renderTHPremium, err:'err-miami', raw:false},
+    {name:'Input_TownHomes_Premium.csv',    key:'thPrem', render:renderTHPremium, err:'err-miami', raw:true},
   ];
   const errs={'err-mx':[],'err-macro':[],'err-us':[],'err-miami':[]};
   for(const f of files){
