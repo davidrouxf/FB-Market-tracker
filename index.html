@@ -8,35 +8,35 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
   /* ══════════════════════════════════════════
-     PALETTE from brand image
-     Teal primary:  #3d8a8c / #6bbfc1 / #2c6668
-     Slate dark:    #3d4f5c / #596a7a
-     Coral accent:  #c85a4a / #d4736a
-     Warm amber:    #b8894a
-     Sage green:    #5a7a6a
-     Background:    #edeae4 / #f7f5f1
+     PALETTE from brand image (actualizada)
+     Teal primary:  #226575 / #7CC4C4 / #1D2B33
+     Slate dark:    #1D2B33 / #4F6575
+     Coral accent:  #EF5841 / #F6BA9F
+     Amber sub.:    #DDA09F (coral suave, sin ámbar en la paleta nueva)
+     Sage sub.:     #61686E (gris urbano, sin verde en la paleta nueva)
+     Background:    #F0F4F6 / #FFFFFF
   ══════════════════════════════════════════ */
   :root {
-    --bg:         #edeae4;
-    --bg2:        #e4e0d8;
-    --surface:    #f7f5f1;
-    --surface2:   #ede9e1;
-    --border:     #d0c9be;
-    --teal:       #3d8a8c;
-    --teal-lt:    #6bbfc1;
-    --teal-dk:    #2c6668;
-    --slate:      #3d4f5c;
-    --slate-lt:   #596a7a;
-    --coral:      #c85a4a;
-    --coral-lt:   #d4736a;
-    --amber:      #b8894a;
-    --sage:       #5a7a6a;
-    --text:       #2a2e35;
-    --text-mid:   #4a5260;
-    --text-muted: #7a8494;
-    --text-dim:   #a8b0bc;
-    --positive:   #3d8a8c;
-    --negative:   #c85a4a;
+    --bg:         #F0F4F6;  /* Gris pálido — Fondos de página (REQUERIDO) */
+    --bg2:        #E8F4F5;  /* Teal pálido — Signature */
+    --surface:    #FFFFFF;  /* blanco — tarjetas (no está en la paleta; elegido para contraste sobre --bg) */
+    --surface2:   #E8F4F5;  /* Teal pálido — filas/hover */
+    --border:     #C2CCD3;  /* Gris niebla — bordes */
+    --teal:       #226575;  /* Teal oscuro — primario · identidad */
+    --teal-lt:    #7CC4C4;  /* Teal suave — acento sobre fondos oscuros */
+    --teal-dk:    #1D2B33;  /* Navy oscuro — anclas oscuras / degradados */
+    --slate:      #1D2B33;  /* Navy oscuro — fondo header (autoridad) */
+    --slate-lt:   #4F6575;  /* Pizarra media — fondo tab-bar */
+    --coral:      #EF5841;  /* Coral rojo — énfasis · energía */
+    --coral-lt:   #F6BA9F;  /* Coral pálido — acentos suaves */
+    --amber:      #DDA09F;  /* Coral suave — 4ta línea de gráfica (sin equivalente dorado en la paleta nueva) */
+    --sage:       #61686E;  /* Gris urbano — neutro de respaldo (sin verde en la paleta nueva) */
+    --text:       #1D2B33;  /* Navy oscuro — texto principal */
+    --text-mid:   #4F6575;  /* Pizarra media — texto medio */
+    --text-muted: #61686E;  /* Gris urbano — "texto secundario" */
+    --text-dim:   #999FA5;  /* Gris azulado — texto tenue */
+    --positive:   #0592A1;  /* Teal brillante — CTAs · acción / positivo */
+    --negative:   #EF5841;  /* Coral rojo — negativo */
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -69,7 +69,7 @@
     font-family: 'Avenir','Avenir Next','Poppins',sans-serif;
     font-size: 21px;
     font-weight: 600;
-    color: #f0ebe3;
+    color: #F8E9DD;
     letter-spacing: 0.01em;
   }
 
@@ -94,7 +94,7 @@
     padding: 5px 14px;
     font-family: 'Avenir','Avenir Next','Poppins',sans-serif;
     font-size: 10px;
-    color: rgba(240,235,227,0.55);
+    color: rgba(248,233,221,0.55);
     letter-spacing: 0.05em;
   }
 
@@ -126,7 +126,7 @@
     font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgba(240,235,227,0.45);
+    color: rgba(248,233,221,0.45);
     cursor: pointer;
     position: relative;
     transition: color 0.2s;
@@ -143,9 +143,9 @@
     transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);
   }
 
-  .tab-btn.active { color:#f0ebe3; }
+  .tab-btn.active { color:#F8E9DD; }
   .tab-btn.active::after { transform:scaleX(1); }
-  .tab-btn:hover { color:rgba(240,235,227,0.8); }
+  .tab-btn:hover { color:rgba(248,233,221,0.8); }
 
   .tab-num { font-size:8px; opacity:0.5; margin-right:5px; }
 
@@ -290,9 +290,9 @@
     margin-top:10px;
   }
 
-  .badge.pos { background:rgba(61,138,140,0.1); color:var(--positive); border:1px solid rgba(61,138,140,0.28); }
-  .badge.neg { background:rgba(200,90,74,0.1);  color:var(--negative); border:1px solid rgba(200,90,74,0.28); }
-  .badge.neu { background:rgba(61,79,92,0.08);  color:var(--slate);    border:1px solid rgba(61,79,92,0.22); }
+  .badge.pos { background:rgba(5,146,161,0.1); color:var(--positive); border:1px solid rgba(5,146,161,0.28); }
+  .badge.neg { background:rgba(239,88,65,0.1);  color:var(--negative); border:1px solid rgba(239,88,65,0.28); }
+  .badge.neu { background:rgba(29,43,51,0.08);  color:var(--slate);    border:1px solid rgba(29,43,51,0.22); }
 
   /* ── CHART CONTROLS ── */
   .chart-controls { display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
@@ -532,8 +532,8 @@
 
   /* ── ERROR ── */
   .error-banner {
-    background:rgba(200,90,74,0.1);
-    border:1px solid rgba(200,90,74,0.3);
+    background:rgba(239,88,65,0.1);
+    border:1px solid rgba(239,88,65,0.3);
     border-radius:3px;
     padding:10px 16px;
     font-family:'Avenir','Avenir Next','Poppins',sans-serif;
@@ -1166,8 +1166,8 @@ function cVal(v){ return v>0?'val-pos':v<0?'val-neg':''; }
 function cCls(v){ return v>0?'pos':v<0?'neg':'neu'; }
 
 // ── Chart.js global defaults (light) ──
-Chart.defaults.color='#7a8494';
-Chart.defaults.borderColor='#d0c9be';
+Chart.defaults.color='#61686E';
+Chart.defaults.borderColor='#C2CCD3';
 Chart.defaults.font.family="'Avenir','Avenir Next','Poppins',sans-serif";
 Chart.defaults.font.size=11;
 
@@ -1177,8 +1177,8 @@ const CB = {
   plugins:{
     legend:{position:'top',align:'end',labels:{boxWidth:20,boxHeight:2,padding:14,usePointStyle:true,pointStyleWidth:16}},
     tooltip:{
-      backgroundColor:'#f7f5f1',borderColor:'#d0c9be',borderWidth:1,padding:12,
-      titleColor:'#7a8494',bodyColor:'#2a2e35',
+      backgroundColor:'#FFFFFF',borderColor:'#C2CCD3',borderWidth:1,padding:12,
+      titleColor:'#61686E',bodyColor:'#1D2B33',
       titleFont:{family:"'Avenir','Avenir Next','Poppins',sans-serif",size:10},
       bodyFont:{family:"'Avenir','Avenir Next','Poppins',sans-serif",size:12},
     }
@@ -1189,7 +1189,7 @@ const CB = {
   }
 };
 
-const C={teal:'#3d8a8c',tealLt:'#6bbfc1',slate:'#3d4f5c',coral:'#c85a4a',amber:'#b8894a',sage:'#5a7a6a'};
+const C={teal:'#226575',tealLt:'#7CC4C4',slate:'#4F6575',coral:'#EF5841',amber:'#DDA09F',sage:'#61686E'};
 
 let state={mxn:[],dm:[],l:[],pi:[],tasas:[],rates:[],macro:[],charts:{}};
 
@@ -1347,7 +1347,7 @@ function renderL(data){
 function setLRange(n){
   const sl=n===0?0:Math.max(0,lAll.labels.length-n);
   const labels=lAll.labels.slice(sl);
-  const ds=[{label:'Active Listings U.S.',data:lAll.us.slice(sl),borderColor:C.teal,backgroundColor:'rgba(61,138,140,0.07)',borderWidth:2,pointRadius:0,fill:true,tension:0.3}];
+  const ds=[{label:'Active Listings U.S.',data:lAll.us.slice(sl),borderColor:C.teal,backgroundColor:'rgba(5,146,161,0.07)',borderWidth:2,pointRadius:0,fill:true,tension:0.3}];
   if(lChart){lChart.data.labels=labels;lChart.data.datasets=ds;lChart.update();}
   else{lChart=new Chart($('l-chart'),{type:'line',data:{labels,datasets:ds},options:{...CB,scales:{...CB.scales,y:{...CB.scales.y,ticks:{callback:v=>(v/1000).toFixed(0)+'k'}}}}});state.charts.l=lChart;}
 }
