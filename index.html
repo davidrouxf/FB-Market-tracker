@@ -624,6 +624,19 @@
     font-size:20px;
     color:var(--teal-dk);
   }
+
+  /* ── TABLA COLAPSABLE ── */
+  .data-table tbody tr.row-hidden { display:none; }
+  .data-table.expanded tbody tr.row-hidden { display:table-row; }
+  .data-table.collapsible tbody tr.last-visible { border-bottom:none; }
+  .toggle-rows {
+    display:block; margin:14px auto 0;
+    background:transparent; border:1px solid var(--border); color:var(--text-muted);
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:9px; letter-spacing:0.12em; text-transform:uppercase;
+    padding:6px 16px; border-radius:2px; cursor:pointer; transition:all 0.18s;
+  }
+  .toggle-rows:hover { border-color:var(--teal); color:var(--teal); }
 </style>
 </head>
 <body>
@@ -1045,7 +1058,9 @@
     <div class="card" style="margin-bottom:18px"><div class="card-accent"></div>
       <div class="card-title">Actividad mensual · mercado general</div>
       <div class="card-subtitle">Ventas cerradas · efectivo · listings · inventario</div>
+      <div class="chart-wrap" style="height:260px;margin-bottom:22px"><canvas id="sh-sales-chart"></canvas></div>
       <table class="data-table" id="sh-general-table"></table>
+      <button class="toggle-rows" id="sh-general-toggle" style="display:none"></button>
     </div>
 
     <div class="card"><div class="card-accent"></div>
@@ -1086,7 +1101,9 @@
     <div class="card" style="margin-bottom:18px"><div class="card-accent"></div>
       <div class="card-title">Actividad mensual · mercado general</div>
       <div class="card-subtitle">Ventas cerradas · efectivo · listings · inventario</div>
+      <div class="chart-wrap" style="height:260px;margin-bottom:22px"><canvas id="th-sales-chart"></canvas></div>
       <table class="data-table" id="th-general-table"></table>
+      <button class="toggle-rows" id="th-general-toggle" style="display:none"></button>
     </div>
 
     <div class="card"><div class="card-accent"></div>
@@ -1487,16 +1504,56 @@ function parsePremiumCSV(rawText) {
   return months;
 }
 
-// Parsear CSV general (tabla simple)
+// Gráfica de ventas (efectivo + financiadas) con todo el histórico
+const salesCharts = {};
+function renderSalesChart(data, canvasId) {
+  const rows = data.filter(r => r['Mes'] && !isNaN(parseInt(r['Ventas Cerradas'])));
+  const labels = rows.map(r => r['Mes']);
+  const cash = rows.map(r => parseInt(r['Ventas en Efectivo']) || 0);
+  const fin  = rows.map(r => Math.max(0, (parseInt(r['Ventas Cerradas']) || 0) - (parseInt(r['Ventas en Efectivo']) || 0)));
+  const ds = [
+    {label:'Efectivo',   data:cash, backgroundColor:C.teal,   stack:'v', borderRadius:2},
+    {label:'Financiadas',data:fin,  backgroundColor:C.tealLt, stack:'v', borderRadius:2},
+  ];
+  if (salesCharts[canvasId]) {
+    const ch = salesCharts[canvasId];
+    ch.data.labels = labels; ch.data.datasets = ds; ch.update();
+    return;
+  }
+  const ch = new Chart($(canvasId), {
+    type:'bar',
+    data:{labels, datasets:ds},
+    options:{
+      ...CB,
+      plugins:{
+        ...CB.plugins,
+        tooltip:{...CB.plugins.tooltip, callbacks:{
+          label:c => `  ${c.dataset.label}: ${c.parsed.y.toLocaleString('es-MX')}`,
+          footer:items => 'Total: ' + items.reduce((a,i)=>a+i.parsed.y,0).toLocaleString('es-MX')
+        }}
+      },
+      scales:{
+        x:{...CB.scales.x, stacked:true, ticks:{maxRotation:0, autoSkip:true, maxTicksLimit:12}},
+        y:{...CB.scales.y, stacked:true, beginAtZero:true, ticks:{maxTicksLimit:6, callback:v=>v.toLocaleString('es-MX')}}
+      }
+    }
+  });
+  salesCharts[canvasId] = ch;
+  state.charts[canvasId] = ch;
+}
+
+// Tabla general: últimos 5 meses visibles, el resto se expande con clic
+const VISIBLE_ROWS = 5;
 function renderGeneralTable(data, tableId) {
   const reversed = [...data].reverse();
   const head = '<thead><tr>' +
     '<th>Mes</th><th>Ventas Cerradas</th><th>Ventas Efectivo</th><th>% Efectivo</th><th>Nuevas Listings</th><th>Inventario</th>' +
     '</tr></thead>';
-  const body = '<tbody>' + reversed.map(r => {
+  const body = '<tbody>' + reversed.map((r, i) => {
     const pct = parseFloat((r['% Ventas en Efectivo']||'').replace('%',''));
     const cls = pct > 50 ? 'val-pos' : '';
-    return `<tr>
+    const rowCls = [i >= VISIBLE_ROWS ? 'row-hidden' : '', i === VISIBLE_ROWS-1 ? 'last-visible' : ''].join(' ').trim();
+    return `<tr${rowCls ? ` class="${rowCls}"` : ''}>
       <td>${r['Mes']||''}</td>
       <td>${parseInt(r['Ventas Cerradas']||0).toLocaleString('es-MX')}</td>
       <td>${parseInt(r['Ventas en Efectivo']||0).toLocaleString('es-MX')}</td>
@@ -1505,7 +1562,24 @@ function renderGeneralTable(data, tableId) {
       <td>${parseInt(r['Inventario']||0).toLocaleString('es-MX')}</td>
     </tr>`;
   }).join('') + '</tbody>';
-  $(tableId).innerHTML = head + body;
+  const table = $(tableId);
+  table.innerHTML = head + body;
+
+  const btn = $(tableId.replace('-table','-toggle'));
+  const extra = reversed.length - VISIBLE_ROWS;
+  if (!btn) return;
+  if (extra <= 0) { btn.style.display = 'none'; table.classList.remove('collapsible'); return; }
+  table.classList.add('collapsible');
+  table.classList.remove('expanded');
+  const setLabel = () => {
+    const open = table.classList.contains('expanded');
+    btn.textContent = open ? 'Ver menos ▴' : `Ver historial completo (${extra} meses más) ▾`;
+    table.querySelector('tr.last-visible')?.classList.toggle('last-visible', !open);
+    if (!open) table.querySelectorAll('tbody tr')[VISIBLE_ROWS-1]?.classList.add('last-visible');
+  };
+  btn.onclick = () => { table.classList.toggle('expanded'); setLabel(); };
+  btn.style.display = 'block';
+  setLabel();
 }
 
 // Renderizar mini bar chart de un bloque premium
@@ -1560,10 +1634,12 @@ function thSelectMonth(idx) {
 
 function renderSHGeneral(data) {
   renderGeneralTable(data, 'sh-general-table');
+  renderSalesChart(data, 'sh-sales-chart');
 }
 
 function renderTHGeneral(data) {
   renderGeneralTable(data, 'th-general-table');
+  renderSalesChart(data, 'th-sales-chart');
 }
 
 function renderSHPremium(rawText) {
