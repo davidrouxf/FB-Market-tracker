@@ -637,6 +637,131 @@
     padding:6px 16px; border-radius:2px; cursor:pointer; transition:all 0.18s;
   }
   .toggle-rows:hover { border-color:var(--teal); color:var(--teal); }
+
+  /* ══════════════════════════════════════════
+     PESTAÑA 05 — COMPRADORES EXTRANJEROS
+  ══════════════════════════════════════════ */
+  .fb-note {
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:10px;
+    line-height:1.6;
+    color:var(--text-dim);
+    margin-top:14px;
+  }
+
+  /* Ranking horizontal (destinos / efectivo) */
+  .rank-list { display:flex; flex-direction:column; gap:9px; }
+  .rank-row {
+    display:grid;
+    grid-template-columns:120px 1fr 44px;
+    align-items:center;
+    gap:12px;
+  }
+  .rank-lbl {
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:11px;
+    color:var(--text-muted);
+    text-align:right;
+    white-space:nowrap;
+  }
+  .rank-track { height:10px; background:var(--surface2); border-radius:5px; overflow:hidden; }
+  .rank-fill {
+    height:100%;
+    border-radius:5px;
+    background:linear-gradient(90deg, var(--teal-dk), var(--teal-lt));
+    transition:width 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .rank-val {
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:12px;
+    font-weight:500;
+    color:var(--slate);
+    text-align:right;
+  }
+  .rank-row.hl .rank-lbl { color:var(--coral); font-weight:600; }
+  .rank-row.hl .rank-fill { background:var(--coral); }
+  .rank-row.hl .rank-val { color:var(--coral); font-weight:600; }
+  .rank-row.mute .rank-fill { background:var(--border); }
+
+  /* Barras apiladas 100% (uso previsto) */
+  .use-row {
+    display:grid;
+    grid-template-columns:140px 1fr;
+    align-items:center;
+    gap:14px;
+    margin-bottom:10px;
+  }
+  .use-lbl {
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:11px;
+    color:var(--text-muted);
+    text-align:right;
+  }
+  .use-row.hl .use-lbl { color:var(--coral); font-weight:600; }
+  .use-bar { display:flex; height:30px; border-radius:3px; overflow:hidden; background:var(--surface2); }
+  .use-row.hl .use-bar { height:38px; box-shadow:0 0 0 2px var(--coral); }
+  .use-seg {
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:10px; font-weight:500;
+    overflow:hidden; white-space:nowrap;
+    border-right:1px solid rgba(255,255,255,0.6);
+  }
+  .use-seg:last-child { border-right:none; }
+  .use-legend { display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:16px; padding-left:154px; }
+  .use-legend span {
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:10px; color:var(--text-muted);
+  }
+  .use-legend i { width:9px; height:9px; border-radius:2px; display:inline-block; }
+  @media(max-width:760px){
+    .use-row{grid-template-columns:1fr; gap:4px}
+    .use-lbl{text-align:left}
+    .use-legend{padding-left:0}
+    .rank-row{grid-template-columns:96px 1fr 40px}
+  }
+
+  /* Mapa de calor estados × año */
+  .heat-wrap { overflow-x:auto; padding-bottom:4px; }
+  .heat { display:grid; gap:3px; min-width:720px; }
+  .heat-h {
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:9px; color:var(--text-dim); text-align:center; padding-bottom:4px;
+  }
+  .heat-st {
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:11px; font-weight:500; color:var(--text-muted);
+    display:flex; align-items:center;
+  }
+  .heat-st.hl { color:var(--coral); font-weight:600; }
+  .heat-c {
+    height:30px; border-radius:2px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:10.5px;
+  }
+  .heat-c.hl { box-shadow:inset 0 0 0 1.5px var(--coral); }
+  .heat-legend {
+    display:flex; align-items:center; gap:8px; margin-top:14px;
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:9px; color:var(--text-dim);
+  }
+  .heat-legend .bar { width:120px; height:8px; border-radius:4px; background:linear-gradient(90deg, rgba(34,101,117,0.08), rgba(34,101,117,1)); }
+
+  /* Tarjeta puente México → Florida */
+  .bridge {
+    display:flex; align-items:center; gap:28px; flex-wrap:wrap;
+    background:var(--slate); border-radius:3px; padding:26px 30px; color:#F8E9DD;
+    border-left:5px solid var(--coral);
+  }
+  .bridge-val {
+    font-family:'Avenir','Avenir Next','Poppins',sans-serif;
+    font-size:64px; line-height:1; font-weight:400; color:var(--coral-lt);
+  }
+  .bridge-txt { flex:1; min-width:240px; font-family:'Avenir','Avenir Next','Poppins',sans-serif; font-size:14px; line-height:1.55; }
+  .bridge-txt b { font-weight:600; color:#fff; }
+  .bridge-txt small { display:block; margin-top:6px; font-size:10px; letter-spacing:0.08em; color:var(--teal-lt); text-transform:uppercase; }
 </style>
 </head>
 <body>
@@ -664,6 +789,9 @@
   </button>
   <button class="tab-btn" onclick="switchTab('miami')">
     <span class="tab-num">04 /</span> Miami-Dade County
+  </button>
+  <button class="tab-btn" onclick="switchTab('fb')">
+    <span class="tab-num">05 /</span> Compradores extranjeros
   </button>
 </div>
 
@@ -1134,8 +1262,154 @@
 </div>
 </div>
 
+<!-- ════════════════════════════════════════════
+     PANEL 5 — COMPRADORES EXTRANJEROS
+════════════════════════════════════════════ -->
+<div id="panel-fb" class="tab-panel">
+<div class="wrapper">
+  <div id="err-fb" class="error-banner"></div>
+
+  <div class="panel-hero">
+    <h2>Compradores <em>Extranjeros</em></h2>
+    <p>México y Florida · Fuente: NAR · Periodo abril 2025 – marzo 2026</p>
+  </div>
+
+  <!-- ── 01 MÉXICO ── -->
+  <div class="section">
+    <div class="section-label">
+      <span class="sl-num">01</span>
+      <span class="sl-text">Compradores de México</span>
+      <div class="sl-line"></div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:18px">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Participación</div>
+        <div class="kpi-value" id="fb-k-share">—</div>
+        <div class="kpi-sub" id="fb-k-share-sub">de las compras extranjeras</div>
+        <div id="fb-k-share-badge"></div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Casas compradas</div>
+        <div class="kpi-value" id="fb-k-units">—</div>
+        <div class="kpi-sub" id="fb-k-units-sub">viviendas existentes</div>
+        <div id="fb-k-units-badge"></div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Volumen en dólares</div>
+        <div class="kpi-value" id="fb-k-vol">—</div>
+        <div class="kpi-sub" id="fb-k-vol-sub">miles de millones USD</div>
+        <div id="fb-k-vol-badge"></div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Precio mediano</div>
+        <div class="kpi-value" id="fb-k-price">—</div>
+        <div class="kpi-sub" id="fb-k-price-sub">precio de compra</div>
+        <div id="fb-k-price-badge"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">México frente a los principales compradores</div>
+        <div class="card-subtitle" id="fb-mx-chart-sub">Participación en compras de extranjeros</div>
+        <div class="chart-controls" id="fb-mx-ctrl">
+          <button class="ctrl-btn active" data-m="share" onclick="setFbMetric('share')">Participación</button>
+          <button class="ctrl-btn" data-m="vol"   onclick="setFbMetric('vol')">Volumen USD</button>
+          <button class="ctrl-btn" data-m="units" onclick="setFbMetric('units')">Unidades</button>
+          <button class="ctrl-btn" data-m="price" onclick="setFbMetric('price')">Precio mediano</button>
+          <button class="ctrl-btn" id="fb-only-btn" style="margin-left:auto" onclick="toggleFbOnly()">Solo México</button>
+        </div>
+        <div class="chart-wrap" style="height:280px"><canvas id="fb-mx-chart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:18px">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Estados destino · compradores de México</div>
+        <div class="card-subtitle">% de las compras de mexicanos por estado</div>
+        <div class="rank-list" id="fb-dest"></div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Pago en efectivo</div>
+        <div class="card-subtitle">% de compras totalmente en efectivo · top 5 compradores</div>
+        <div class="rank-list" id="fb-cash"></div>
+      </div>
+    </div>
+
+    <div class="card"><div class="card-accent"></div>
+      <div class="card-title">Uso previsto de la propiedad</div>
+      <div class="card-subtitle">Distribución por tipo de uso · México vs. otros compradores</div>
+      <div id="fb-use"></div>
+      <div class="use-legend" id="fb-use-legend"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 02 FLORIDA ── -->
+  <div class="section">
+    <div class="section-label">
+      <span class="sl-num">02</span>
+      <span class="sl-text">Florida como destino</span>
+      <div class="sl-line"></div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:18px">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Florida</div>
+        <div class="kpi-value" id="fl-k-share">—</div>
+        <div class="kpi-sub">de las compras extranjeras</div>
+        <div id="fl-k-share-badge"></div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Cambio desde 2011</div>
+        <div class="kpi-value" id="fl-k-chg">—</div>
+        <div class="kpi-sub" id="fl-k-chg-sub">puntos porcentuales</div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">California</div>
+        <div class="kpi-value" id="fl-k-ca">—</div>
+        <div class="kpi-sub">el estado que más se acerca</div>
+        <div id="fl-k-ca-badge"></div>
+      </div>
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Brecha Florida – California</div>
+        <div class="kpi-value" id="fl-k-gap">—</div>
+        <div class="kpi-sub" id="fl-k-gap-sub">puntos porcentuales</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Participación por estado · Florida vs. California vs. Texas</div>
+        <div class="card-subtitle">% del total de compras de compradores extranjeros</div>
+        <div class="chart-wrap" style="height:260px"><canvas id="fl-chart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px"><div class="card-accent"></div>
+      <div class="card-title">Top 10 estados · mapa de calor</div>
+      <div class="card-subtitle">Participación de cada estado en las compras extranjeras, por año</div>
+      <div class="heat-wrap"><div class="heat" id="fb-heat"></div></div>
+      <div class="heat-legend"><span id="fb-heat-min">0%</span><div class="bar"></div><span id="fb-heat-max">—</span></div>
+      <div class="fb-note">Top 10 definido según el año más reciente.</div>
+    </div>
+
+    <div class="bridge" id="fb-bridge" style="display:none">
+      <div class="bridge-val" id="fb-bridge-val">—</div>
+      <div class="bridge-txt" id="fb-bridge-txt"></div>
+    </div>
+  </div>
+
+  <div class="fb-note" style="margin-top:36px">
+    Fuente: National Association of REALTORS® (NAR), International Transactions in U.S. Residential Real Estate 2026. Encuesta en línea del 6 al 30 de abril de 2026 sobre transacciones de abril 2025 a marzo 2026: 4,970 REALTORS® respondieron, 381 con al menos un comprador extranjero. Cifras estimadas a partir de una muestra; interpretar con cautela, sobre todo los cambios de un año a otro. La etiqueta de cada año corresponde al reporte de ese año.
+  </div>
+</div>
+</div>
+
 <footer>
-  Finanz Butik Market Tracker &nbsp;·&nbsp; Datos: FRED, Banxico, S&P CoreLogic &nbsp;·&nbsp; Actualización automática cada 5 min
+  Finanz Butik Market Tracker &nbsp;·&nbsp; Datos: FRED, Banxico, S&P CoreLogic, NAR &nbsp;·&nbsp; Actualización automática cada 5 min
 </footer>
 
 <script>
@@ -1143,12 +1417,13 @@
 // TAB LOGIC
 // ══════════════════
 function switchTab(t) {
-  const tabs=['mx','macro','us','miami'];
+  const tabs=['mx','macro','us','miami','fb'];
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===t));
   document.getElementById('panel-mx').classList.toggle('active',t==='mx');
   document.getElementById('panel-macro').classList.toggle('active',t==='macro');
   document.getElementById('panel-us').classList.toggle('active',t==='us');
   document.getElementById('panel-miami').classList.toggle('active',t==='miami');
+  document.getElementById('panel-fb').classList.toggle('active',t==='fb');
   setTimeout(()=>Object.values(state.charts).forEach(c=>c&&c.resize()),60);
 }
 
@@ -1656,6 +1931,223 @@ function renderTHPremium(rawText) {
   renderPremiumMonth(thMonths, 'th', thSelectedIdx);
 }
 
+// ══════════════════════════════════════════
+// COMPRADORES EXTRANJEROS (NAR)
+// ══════════════════════════════════════════
+const fbData = {};   // paises, volumen, unidades, precio, estados, destinos, uso
+const FB_COUNTRIES = [
+  {k:'Canada', n:'Canadá',       color:'#4F6575', dash:[]},
+  {k:'China',  n:'China',        color:'#8896A0', dash:[6,3]},
+  {k:'India',  n:'India',        color:'#A5B1BA', dash:[2,3]},
+  {k:'UK',     n:'Reino Unido',  color:'#61686E', dash:[8,3,2,3]},
+];
+const FB_METRICS = {
+  share:{src:'paises',   sub:'Participación en compras de extranjeros (%)',            tip:v=>fmt(v,0)+'%',          axis:v=>v+'%'},
+  vol:  {src:'volumen',  sub:'Volumen de compras de viviendas existentes (miles de millones USD)', tip:v=>'$'+fmt(v,1)+'B', axis:v=>'$'+v+'B'},
+  units:{src:'unidades', sub:'Número de viviendas existentes compradas',               tip:v=>fmt(v,0),              axis:v=>(v/1000)+'k'},
+  price:{src:'precio',   sub:'Precio mediano de compra (USD)',                         tip:v=>'$'+fmt(v,0),          axis:v=>'$'+(v/1000)+'K'},
+};
+let fbMetric='share', fbOnlyMx=false, fbChart=null, flChart=null;
+
+const fbNum = v => parseFloat(v);
+const fbRows = (key) => (fbData[key]||[]).filter(r=>r['Año']&&!isNaN(parseFloat(r['Año'])));
+const pctChg = (a,b) => (b? (a-b)/b*100 : NaN);
+
+function fbBadge(diff, text, goodWhenUp=true){
+  if(isNaN(diff)) return '';
+  const cls = diff===0 ? 'neu' : ((diff>0)===goodWhenUp ? 'pos' : 'neg');
+  return `<div class="badge ${cls}">${diff>0?'▲':diff<0?'▼':'■'} ${text}</div>`;
+}
+
+// ── KPIs México ──
+function fbRenderMxKpis(){
+  const p=fbRows('paises'), u=fbRows('unidades'), v=fbRows('volumen'), pr=fbRows('precio');
+  if(p.length>1){
+    const l=p[p.length-1], pv=p[p.length-2], d=fbNum(l['Mexico'])-fbNum(pv['Mexico']);
+    $('fb-k-share').textContent=fmt(fbNum(l['Mexico']),0)+'%';
+    const max=Math.max(...p.map(r=>fbNum(r['Mexico'])));
+    $('fb-k-share-sub').textContent = fbNum(l['Mexico'])>=max ? 'máximo histórico de la serie' : 'de las compras extranjeras';
+    $('fb-k-share-badge').innerHTML=fbBadge(d, `${fmt(Math.abs(d),0)} pp vs ${pv['Año']}`);
+  }
+  if(u.length>1){
+    const l=u[u.length-1], pv=u[u.length-2], c=pctChg(fbNum(l['Mexico']),fbNum(pv['Mexico']));
+    $('fb-k-units').textContent=fmt(fbNum(l['Mexico']),0);
+    $('fb-k-units-sub').textContent=`${fmt(fbNum(l['Mexico'])/fbNum(l['All Foreign'])*100,0)}% del total de extranjeros (${fmt(fbNum(l['All Foreign']),0)})`;
+    $('fb-k-units-badge').innerHTML=fbBadge(c, `${fmt(Math.abs(c),0)}% vs ${pv['Año']}`);
+  }
+  if(v.length>1){
+    const l=v[v.length-1], pv=v[v.length-2], c=pctChg(fbNum(l['Mexico']),fbNum(pv['Mexico']));
+    $('fb-k-vol').textContent='$'+fmt(fbNum(l['Mexico']),1)+'B';
+    $('fb-k-vol-sub').textContent=`${fmt(fbNum(l['Mexico'])/fbNum(l['All Foreign'])*100,0)}% del total ($${fmt(fbNum(l['All Foreign']),1)}B)`;
+    $('fb-k-vol-badge').innerHTML=fbBadge(c, `${fmt(Math.abs(c),0)}% vs ${pv['Año']}`);
+  }
+  if(pr.length>1){
+    const l=pr[pr.length-1], pv=pr[pr.length-2], c=pctChg(fbNum(l['Mexico']),fbNum(pv['Mexico']));
+    $('fb-k-price').textContent='$'+fmt(fbNum(l['Mexico']),0);
+    $('fb-k-price-sub').textContent=`Todos los extranjeros: $${fmt(fbNum(l['All Foreign']),0)}`;
+    $('fb-k-price-badge').innerHTML=fbBadge(c, `${fmt(Math.abs(c),0)}% vs ${pv['Año']}`);
+  }
+}
+
+// ── Gráfica México vs otros ──
+function fbRenderMxChart(){
+  const m=FB_METRICS[fbMetric], rows=fbRows(m.src);
+  if(!rows.length) return;
+  $('fb-mx-chart-sub').textContent=m.sub;
+  const labels=rows.map(r=>r['Año']);
+  const ds=[];
+  if(!fbOnlyMx){
+    FB_COUNTRIES.forEach(c=>ds.push({label:c.n,data:rows.map(r=>fbNum(r[c.k])),borderColor:c.color,borderWidth:1.5,borderDash:c.dash,pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2}));
+  }
+  ds.push({label:'México',data:rows.map(r=>fbNum(r['Mexico'])),borderColor:C.coral,backgroundColor:fbOnlyMx?'rgba(239,88,65,0.08)':'transparent',borderWidth:3,pointRadius:fbOnlyMx?3:0,pointHoverRadius:4,tension:0.2,fill:fbOnlyMx,order:1});
+  const opts={...CB,
+    plugins:{...CB.plugins,tooltip:{...CB.plugins.tooltip,itemSort:(a,b)=>b.parsed.y-a.parsed.y,callbacks:{label:c=>`  ${c.dataset.label}: ${m.tip(c.parsed.y)}`}}},
+    scales:{...CB.scales,y:{...CB.scales.y,beginAtZero:true,ticks:{maxTicksLimit:6,callback:m.axis}}}};
+  if(fbChart){fbChart.data.labels=labels;fbChart.data.datasets=ds;fbChart.options=opts;fbChart.update();}
+  else{fbChart=new Chart($('fb-mx-chart'),{type:'line',data:{labels,datasets:ds},options:opts});state.charts.fbMx=fbChart;}
+}
+function setFbMetric(k){
+  fbMetric=k;
+  document.querySelectorAll('#fb-mx-ctrl .ctrl-btn[data-m]').forEach(b=>b.classList.toggle('active',b.dataset.m===k));
+  fbRenderMxChart();
+}
+function toggleFbOnly(){
+  fbOnlyMx=!fbOnlyMx;
+  $('fb-only-btn').classList.toggle('active',fbOnlyMx);
+  fbRenderMxChart();
+}
+
+// ── Rankings horizontales ──
+const ST_ES = {'South Carolina':'Carolina del Sur'};
+function fbRankHTML(items, hlName, muteExcept){
+  const max=Math.max(...items.map(i=>i.v),1);
+  return items.map(i=>{
+    const cls = i.name===hlName ? ' hl' : (muteExcept?' mute':'');
+    return `<div class="rank-row${cls}"><div class="rank-lbl">${i.label}</div><div class="rank-track"><div class="rank-fill" style="width:${(i.v/max*100).toFixed(1)}%"></div></div><div class="rank-val">${fmt(i.v,0)}%</div></div>`;
+  }).join('');
+}
+function fbRenderDest(){
+  const d=(fbData.destinos||[]).filter(r=>r['Estado']&&!isNaN(fbNum(r['Porcentaje'])));
+  if(!d.length) return;
+  const items=d.map(r=>({name:r['Estado'],label:ST_ES[r['Estado']]||r['Estado'],v:fbNum(r['Porcentaje'])}));
+  $('fb-dest').innerHTML=fbRankHTML(items,'Florida',false);
+}
+const UK_ES = {Mexico:'México',Canada:'Canadá',China:'China',India:'India',UK:'Reino Unido'};
+function fbRenderCash(){
+  const u=(fbData.uso||[]).filter(r=>r['Grupo']&&!isNaN(fbNum(r['All Cash'])));
+  if(!u.length) return;
+  const items=u.map(r=>({name:r['Grupo'],label:UK_ES[r['Grupo']]||r['Grupo'],v:fbNum(r['All Cash'])})).sort((a,b)=>b.v-a.v);
+  $('fb-cash').innerHTML=fbRankHTML(items,'Mexico',true);
+}
+
+// ── Uso previsto (barras apiladas 100%) ──
+const FB_USE = [
+  {k:'Primary Residence',   n:'Residencia principal',     bg:'#226575', fg:'#fff'},
+  {k:'Residential Rental',  n:'Renta residencial',        bg:'#7CC4C4', fg:'#1D2B33'},
+  {k:'Vacation and Rental', n:'Vacacional y renta',       bg:'#4F6575', fg:'#fff'},
+  {k:'Vacation Home',       n:'Casa vacacional',          bg:'#EF5841', fg:'#fff'},
+  {k:'Student Use',         n:'Uso estudiantil',          bg:'#F6BA9F', fg:'#1D2B33'},
+  {k:'Other',               n:'Otro',                     bg:'#C2CCD3', fg:'#1D2B33'},
+  {k:'Dont Know',           n:'No sabe',                  bg:'#999FA5', fg:'#fff'},
+];
+const USE_LBL = {'All Foreign Buyers':'Todos los extranjeros',Mexico:'México',Canada:'Canadá',China:'China',India:'India',UK:'Reino Unido'};
+function fbRenderUse(){
+  const u=(fbData.uso||[]).filter(r=>r['Grupo']);
+  if(!u.length) return;
+  // México primero, luego todos, luego el resto
+  const order=['Mexico','All Foreign Buyers','Canada','China','India','UK'];
+  const rows=order.map(g=>u.find(r=>r['Grupo']===g)).filter(Boolean);
+  $('fb-use').innerHTML=rows.map(r=>{
+    const segs=FB_USE.map(c=>({c,v:fbNum(r[c.k])||0})).filter(s=>s.v>0);
+    return `<div class="use-row${r['Grupo']==='Mexico'?' hl':''}"><div class="use-lbl">${USE_LBL[r['Grupo']]||r['Grupo']}</div><div class="use-bar">`+
+      segs.map(s=>`<div class="use-seg" title="${s.c.n}: ${s.v}%" style="flex:${s.v} 0 0;background:${s.c.bg};color:${s.c.fg}">${s.v>=6?s.v+'%':''}</div>`).join('')+
+      `</div></div>`;
+  }).join('');
+  $('fb-use-legend').innerHTML=FB_USE.map(c=>`<span><i style="background:${c.bg}"></i>${c.n}</span>`).join('');
+}
+
+// ── Florida ──
+const STATE_NAMES={FL:'Florida',CA:'California',TX:'Texas',NJ:'Nueva Jersey',GA:'Georgia',MD:'Maryland',WA:'Washington',MI:'Míchigan',AZ:'Arizona',NY:'Nueva York'};
+function fbRenderFlorida(){
+  const e=fbRows('estados');
+  if(e.length<2) return;
+  const l=e[e.length-1], pv=e[e.length-2], f=e[0];
+  const fl=fbNum(l['FL']), ca=fbNum(l['CA']);
+  $('fl-k-share').textContent=fmt(fl,0)+'%';
+  const d1=fl-fbNum(pv['FL']);
+  $('fl-k-share-badge').innerHTML=fbBadge(d1, `${fmt(Math.abs(d1),0)} pp vs ${pv['Año']}`);
+  const chg=fl-fbNum(f['FL']);
+  $('fl-k-chg').textContent=(chg>0?'+':chg<0?'−':'')+fmt(Math.abs(chg),0)+' pp';
+  $('fl-k-chg-sub').textContent=`${fmt(fbNum(f['FL']),0)}% en ${f['Año']} → ${fmt(fl,0)}% en ${l['Año']}`;
+  $('fl-k-ca').textContent=fmt(ca,0)+'%';
+  const d2=ca-fbNum(pv['CA']);
+  $('fl-k-ca-badge').innerHTML=fbBadge(d2, `${fmt(Math.abs(d2),0)} pp vs ${pv['Año']}`);
+  $('fl-k-gap').textContent=fmt(fl-ca,0)+' pp';
+  $('fl-k-gap-sub').textContent=`vs ${fmt(fbNum(f['FL'])-fbNum(f['CA']),0)} pp en ${f['Año']}`;
+
+  // Gráfica
+  const labels=e.map(r=>r['Año']);
+  const ds=[
+    {label:'California',data:e.map(r=>fbNum(r['CA'])),borderColor:'#4F6575',borderWidth:1.5,pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2},
+    {label:'Texas',     data:e.map(r=>fbNum(r['TX'])),borderColor:'#A5B1BA',borderWidth:1.5,borderDash:[6,3],pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2},
+    {label:'Florida',   data:e.map(r=>fbNum(r['FL'])),borderColor:C.coral,borderWidth:3,pointRadius:0,pointHoverRadius:4,tension:0.2,fill:false,order:1},
+  ];
+  const opts={...CB,
+    plugins:{...CB.plugins,tooltip:{...CB.plugins.tooltip,itemSort:(a,b)=>b.parsed.y-a.parsed.y,callbacks:{label:c=>`  ${c.dataset.label}: ${fmt(c.parsed.y,0)}%`}}},
+    scales:{...CB.scales,y:{...CB.scales.y,beginAtZero:true,ticks:{maxTicksLimit:6,callback:v=>v+'%'}}}};
+  if(flChart){flChart.data.labels=labels;flChart.data.datasets=ds;flChart.update();}
+  else{flChart=new Chart($('fl-chart'),{type:'line',data:{labels,datasets:ds},options:opts});state.charts.fl=flChart;}
+
+  // Mapa de calor (estados en filas, años en columnas)
+  const states=Object.keys(e[0]).filter(k=>k!=='Año');
+  const max=Math.max(...e.flatMap(r=>states.map(s=>fbNum(r[s]))));
+  const heat=$('fb-heat');
+  heat.style.gridTemplateColumns=`52px repeat(${e.length}, minmax(38px,1fr))`;
+  let html='<div></div>'+e.map(r=>`<div class="heat-h">${r['Año']}</div>`).join('');
+  states.forEach(s=>{
+    const hl=s==='FL';
+    html+=`<div class="heat-st${hl?' hl':''}" title="${STATE_NAMES[s]||s}">${s}</div>`;
+    e.forEach(r=>{
+      const v=fbNum(r[s]), a=0.08+0.92*(v/max);
+      html+=`<div class="heat-c${hl?' hl':''}" title="${STATE_NAMES[s]||s} · ${r['Año']}: ${v}%" style="background:rgba(34,101,117,${a.toFixed(3)});color:${a>0.5?'#fff':'#1D2B33'}">${v}%</div>`;
+    });
+  });
+  heat.innerHTML=html;
+  $('fb-heat-max').textContent=fmt(max,0)+'%';
+  fbRenderBridge();
+}
+
+// ── Puente México → Florida ──
+function fbRenderBridge(){
+  const d=(fbData.destinos||[]).filter(r=>r['Estado']&&!isNaN(fbNum(r['Porcentaje'])));
+  const fl=d.find(r=>r['Estado']==='Florida');
+  if(!fl) return;
+  const v=fbNum(fl['Porcentaje']);
+  const rank=1+d.filter(r=>fbNum(r['Porcentaje'])>v).length;
+  const ties=d.filter(r=>r['Estado']!=='Florida'&&fbNum(r['Porcentaje'])===v).map(r=>ST_ES[r['Estado']]||r['Estado']);
+  const top=d.filter(r=>fbNum(r['Porcentaje'])===Math.max(...d.map(x=>fbNum(x['Porcentaje'])))).map(r=>r['Estado']);
+  $('fb-bridge-val').textContent=fmt(v,0)+'%';
+  $('fb-bridge-txt').innerHTML=`<b>de los compradores mexicanos eligen Florida.</b> Es el destino #${rank} de México${ties.length?`, empatado con ${ties.join(' y ')}`:''}. ${top.length?`Los primeros lugares son ${top.map(t=>ST_ES[t]||t).join(' y ')}, con ${fmt(Math.max(...d.map(x=>fbNum(x['Porcentaje']))),0)}% cada uno.`:''}<small>Conexión México → Florida</small>`;
+  $('fb-bridge').style.display='flex';
+}
+
+function fbRefresh(){
+  fbRenderMxKpis();
+  fbRenderMxChart();
+  fbRenderDest();
+  fbRenderCash();
+  fbRenderUse();
+  fbRenderFlorida();
+}
+const fbLoader = key => data => { fbData[key]=data; fbRefresh(); };
+const renderFBPaises   = fbLoader('paises');
+const renderFBVolumen  = fbLoader('volumen');
+const renderFBUnidades = fbLoader('unidades');
+const renderFBPrecio   = fbLoader('precio');
+const renderFBEstados  = fbLoader('estados');
+const renderFBDestinos = fbLoader('destinos');
+const renderFBUso      = fbLoader('uso');
+
 async function loadAll(){
   const files=[
     {name:'Input_MXN.csv',                  key:'mxn',    render:renderMXN,       err:'err-mx',    raw:false},
@@ -1669,8 +2161,15 @@ async function loadAll(){
     {name:'Input_SingleHomes_Premium.csv',  key:'shPrem', render:renderSHPremium, err:'err-miami', raw:true},
     {name:'Input_TownHomes_general.csv',    key:'thGen',  render:renderTHGeneral, err:'err-miami', raw:false},
     {name:'Input_TownHomes_Premium.csv',    key:'thPrem', render:renderTHPremium, err:'err-miami', raw:true},
+    {name:'Input_FB_Paises.csv',            key:'fbPaises',   render:renderFBPaises,   err:'err-fb', raw:false},
+    {name:'Input_FB_Volumen.csv',           key:'fbVolumen',  render:renderFBVolumen,  err:'err-fb', raw:false},
+    {name:'Input_FB_Unidades.csv',          key:'fbUnidades', render:renderFBUnidades, err:'err-fb', raw:false},
+    {name:'Input_FB_Precio.csv',            key:'fbPrecio',   render:renderFBPrecio,   err:'err-fb', raw:false},
+    {name:'Input_FB_Estados.csv',           key:'fbEstados',  render:renderFBEstados,  err:'err-fb', raw:false},
+    {name:'Input_FB_Mexico_Destinos.csv',   key:'fbDestinos', render:renderFBDestinos, err:'err-fb', raw:false},
+    {name:'Input_FB_Uso.csv',               key:'fbUso',      render:renderFBUso,      err:'err-fb', raw:false},
   ];
-  const errs={'err-mx':[],'err-macro':[],'err-us':[],'err-miami':[]};
+  const errs={'err-mx':[],'err-macro':[],'err-us':[],'err-miami':[],'err-fb':[]};
   for(const f of files){
     try{
       const r=await fetch(f.name+'?t='+Date.now());
