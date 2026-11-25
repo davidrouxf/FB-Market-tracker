@@ -1936,10 +1936,10 @@ function renderTHPremium(rawText) {
 // ══════════════════════════════════════════
 const fbData = {};   // paises, volumen, unidades, precio, estados, destinos, uso
 const FB_COUNTRIES = [
-  {k:'Canada', n:'Canadá',       color:'#4F6575', dash:[]},
-  {k:'China',  n:'China',        color:'#8896A0', dash:[6,3]},
-  {k:'India',  n:'India',        color:'#A5B1BA', dash:[2,3]},
-  {k:'UK',     n:'Reino Unido',  color:'#61686E', dash:[8,3,2,3]},
+  {k:'Canada', n:'Canadá',       color:'#226575', dash:[]},
+  {k:'China',  n:'China',        color:'#E0A82E', dash:[]},
+  {k:'India',  n:'India',        color:'#8E7CC3', dash:[]},
+  {k:'UK',     n:'Reino Unido',  color:'#1D2B33', dash:[6,4]},
 ];
 const FB_METRICS = {
   share:{src:'paises',   sub:'Participación en compras de extranjeros (%)',            tip:v=>fmt(v,0)+'%',          axis:v=>v+'%'},
@@ -1997,7 +1997,7 @@ function fbRenderMxChart(){
   const labels=rows.map(r=>r['Año']);
   const ds=[];
   if(!fbOnlyMx){
-    FB_COUNTRIES.forEach(c=>ds.push({label:c.n,data:rows.map(r=>fbNum(r[c.k])),borderColor:c.color,borderWidth:1.5,borderDash:c.dash,pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2}));
+    FB_COUNTRIES.forEach(c=>ds.push({label:c.n,data:rows.map(r=>fbNum(r[c.k])),borderColor:c.color,borderWidth:2,borderDash:c.dash,pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2}));
   }
   ds.push({label:'México',data:rows.map(r=>fbNum(r['Mexico'])),borderColor:C.coral,backgroundColor:fbOnlyMx?'rgba(239,88,65,0.08)':'transparent',borderWidth:3,pointRadius:fbOnlyMx?3:0,pointHoverRadius:4,tension:0.2,fill:fbOnlyMx,order:1});
   const opts={...CB,
@@ -2088,8 +2088,8 @@ function fbRenderFlorida(){
   // Gráfica
   const labels=e.map(r=>r['Año']);
   const ds=[
-    {label:'California',data:e.map(r=>fbNum(r['CA'])),borderColor:'#4F6575',borderWidth:1.5,pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2},
-    {label:'Texas',     data:e.map(r=>fbNum(r['TX'])),borderColor:'#A5B1BA',borderWidth:1.5,borderDash:[6,3],pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2},
+    {label:'California',data:e.map(r=>fbNum(r['CA'])),borderColor:'#226575',borderWidth:2,pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2},
+    {label:'Texas',     data:e.map(r=>fbNum(r['TX'])),borderColor:'#E0A82E',borderWidth:2,pointRadius:0,pointHoverRadius:3,tension:0.2,fill:false,order:2},
     {label:'Florida',   data:e.map(r=>fbNum(r['FL'])),borderColor:C.coral,borderWidth:3,pointRadius:0,pointHoverRadius:4,tension:0.2,fill:false,order:1},
   ];
   const opts={...CB,
