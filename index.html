@@ -854,6 +854,20 @@
       </div>
     </div>
 
+    <!-- MXN variación mensual -->
+    <div id="mxn-month-card" style="margin-bottom:18px">
+      <div class="card"><div class="card-accent"></div>
+        <div class="card-title">Apreciación / Depreciación mensual del peso</div>
+        <div class="card-subtitle">Variación mes a mes frente al dólar · ▲ el peso se aprecia · ▼ el peso se deprecia</div>
+        <div class="range-table" id="mxn-month-stats" style="margin:0 0 20px;flex-wrap:wrap"></div>
+        <div class="chart-controls" id="mxn-month-ctrl">
+          <button class="ctrl-btn" data-r="12" onclick="setMxnMonthRange(12)">12M</button>
+          <button class="ctrl-btn active" data-r="0" onclick="setMxnMonthRange(0)">Todo</button>
+        </div>
+        <div class="chart-wrap" style="height:260px"><canvas id="mxn-month-chart"></canvas></div>
+      </div>
+    </div>
+
     <!-- MXN sub-tables -->
     <div class="grid-2">
       <div class="card"><div class="card-accent"></div>
@@ -1533,6 +1547,7 @@ function renderMXN(data){
       </div>
     </div>`).join('');
 
+  renderMxnMonthly(data);
   setMxnRange(252);
 }
 
@@ -1549,6 +1564,61 @@ function setMxnRange(n){
   ];
   if(mxnChart){mxnChart.data.labels=labels;mxnChart.data.datasets=ds;mxnChart.update();}
   else{mxnChart=new Chart($('mxn-chart'),{type:'line',data:{labels,datasets:ds},options:{...CB,plugins:{...CB.plugins,tooltip:{...CB.plugins.tooltip,callbacks:{label:c=>`  ${c.dataset.label}: ${fmt(c.parsed.y,4)}`}}}}});state.charts.mxn=mxnChart;}
+}
+
+// ══════════════════
+// MXN · APRECIACIÓN / DEPRECIACIÓN MENSUAL
+// ══════════════════
+let mxnMonthAll={labels:[],vals:[]}, mxnMonthChart=null;
+
+function renderMxnMonthly(data){
+  const card=$('mxn-month-card');
+  if(!data.length){ if(card) card.style.display='none'; return; }
+  const keys=Object.keys(data[0]);
+  const vk=keys.find(k=>/apreciaci/i.test(k));        // 'Apreciacion/Depreciacion'
+  if(!vk||!keys.includes('Mes')){ if(card) card.style.display='none'; return; }
+  const rows=data.filter(r=>(r['Mes']||'').trim()&&!isNaN(parseFloat(r[vk])));
+  const labels=rows.map(r=>r['Mes'].trim()), vals=rows.map(r=>parseFloat(r[vk]));
+  // El primer mes es la base de comparación (0.00), no una variación: se omite
+  if(vals.length&&vals[0]===0){ labels.shift(); vals.shift(); }
+  mxnMonthAll={labels,vals};
+  if(card) card.style.display = vals.length ? '' : 'none';
+  if(vals.length) setMxnMonthRange(0);
+}
+
+function setMxnMonthRange(n){
+  document.querySelectorAll('#mxn-month-ctrl .ctrl-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.r)===n));
+  const sl=n===0?0:Math.max(0,mxnMonthAll.labels.length-n);
+  const labels=mxnMonthAll.labels.slice(sl), vals=mxnMonthAll.vals.slice(sl);
+  if(!vals.length) return;
+
+  // Resumen del periodo mostrado
+  const last=vals.length-1;
+  const best=vals.indexOf(Math.max(...vals)), worst=vals.indexOf(Math.min(...vals));
+  const up=vals.filter(v=>v>0).length, dn=vals.filter(v=>v<0).length;
+  const f=v=>(v>0?'+':'')+fmt(v,2)+'%';
+  const stat=(t,body,l)=>`<div class="range-item" style="min-width:150px"><div class="ri-period">${t}</div><div class="ri-num" style="font-size:20px">${body}</div><div class="ri-lbl" style="margin-top:3px">${l}</div></div>`;
+  const val=v=>`<span class="${cVal(v)}">${f(v)}</span>`;
+  $('mxn-month-stats').innerHTML=
+    stat('Último mes',val(vals[last]),labels[last])+
+    stat('Mejor mes',val(vals[best]),labels[best])+
+    stat('Peor mes',val(vals[worst]),labels[worst])+
+    stat('Meses ▲ / ▼',`<span class="val-pos">${up}</span> / <span class="val-neg">${dn}</span>`,'apreciación / depreciación');
+
+  // Gráfica de barras: teal = el peso se aprecia, coral = se deprecia
+  const colors=vals.map(v=>v>=0?'#0592A1':C.coral);
+  const ds=[{label:'Variación mensual',data:vals,backgroundColor:colors,borderRadius:2,maxBarThickness:38}];
+  const opts={...CB,
+    plugins:{...CB.plugins,legend:{display:false},tooltip:{...CB.plugins.tooltip,callbacks:{
+      label:c=>`  ${c.parsed.y>=0?'Apreciación':'Depreciación'} del peso: ${c.parsed.y>0?'+':''}${fmt(c.parsed.y,2)}%`
+    }}},
+    scales:{
+      x:{...CB.scales.x,ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12}},
+      y:{...CB.scales.y,ticks:{maxTicksLimit:7,callback:v=>v+'%'},
+         grid:{drawTicks:false,color:ctx=>(ctx.tick&&ctx.tick.value===0)?'#61686E':'rgba(208,201,190,0.45)'}}
+    }};
+  if(mxnMonthChart){mxnMonthChart.data.labels=labels;mxnMonthChart.data.datasets=ds;mxnMonthChart.options=opts;mxnMonthChart.update();}
+  else{mxnMonthChart=new Chart($('mxn-month-chart'),{type:'bar',data:{labels,datasets:ds},options:opts});state.charts.mxnMonth=mxnMonthChart;}
 }
 
 // ══════════════════
